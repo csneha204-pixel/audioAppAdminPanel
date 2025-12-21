@@ -22,10 +22,12 @@ const genreOptions = [
 
 const Series: React.FC = () => {
   const [image, setImage] = useState<File | null>(null);
+  const [seriesName, setSeriesName] = useState("");
   const [language, setLanguage] = useState<string[]>([]);
   const [genre, setGenre] = useState<string[]>([]);
   const [season, setSeason] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -71,11 +73,13 @@ const Series: React.FC = () => {
       // Simulate fetching data for the selected series
       // In real app, fetch from API
       const fakeData = {
+        seriesName: "Sample Series Name",
         image: null,
         language: ["en"],
         genre: ["action"],
         season: "1",
         releaseDate: "2025-12-21",
+        description: "This is a sample description for the series."
       };
       setEditData(fakeData);
       setEditMode(true);
@@ -90,8 +94,9 @@ const Series: React.FC = () => {
     setEditData((prev: any) => ({ ...prev, [field]: value }));
   };
   const handleEditImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setEditData((prev: any) => ({ ...prev, image: e.target.files[0] }));
+    const files = e.target.files;
+    if (files && files[0]) {
+      setEditData((prev: any) => ({ ...prev, image: files[0] }));
     }
   };
   const handleEditSubmit = (e: React.FormEvent) => {
@@ -126,6 +131,18 @@ const Series: React.FC = () => {
               />
             </label>
             {editData.image && <span className={styles.fileName}>{typeof editData.image === 'string' ? editData.image : editData.image.name}</span>}
+          </div>
+          <div className={styles.formRow}>
+            <div className={styles.formCol} style={{ width: '100%' }}>
+              <label className={styles.label}>Series Name</label>
+              <input
+                type="text"
+                className={styles.input}
+                value={editData.seriesName || ''}
+                onChange={e => handleEditChange('seriesName', e.target.value)}
+                placeholder="Enter series name"
+              />
+            </div>
           </div>
           <div className={styles.formRow}>
             <div className={styles.formCol}>
@@ -183,6 +200,18 @@ const Series: React.FC = () => {
               </div>
             </div>
           </div>
+          <div className={styles.formRow}>
+            <div className={styles.formCol} style={{ width: '100%' }}>
+              <label className={styles.label}>Series Description</label>
+              <textarea
+                className={styles.input}
+                style={{ minHeight: 80, resize: 'vertical' }}
+                value={editData.description || ''}
+                onChange={e => handleEditChange('description', e.target.value)}
+                placeholder="Write a description for this series..."
+              />
+            </div>
+          </div>
           <div className={styles.submitRow}>
             <button type="submit" className={styles.submitBtn}>Update</button>
           </div>
@@ -200,6 +229,18 @@ const Series: React.FC = () => {
               />
             </label>
             {image && <span className={styles.fileName}>{image.name}</span>}
+          </div>
+          <div className={styles.formRow}>
+            <div className={styles.formCol} style={{ width: '100%' }}>
+              <label className={styles.label}>Series Name</label>
+              <input
+                type="text"
+                className={styles.input}
+                value={seriesName}
+                onChange={e => setSeriesName(e.target.value)}
+                placeholder="Enter series name"
+              />
+            </div>
           </div>
           <div className={styles.formRow}>
             <div className={styles.formCol}>
@@ -255,6 +296,18 @@ const Series: React.FC = () => {
                   }}
                 />
               </div>
+            </div>
+          </div>
+          <div className={styles.formRow}>
+            <div className={styles.formCol} style={{ width: '100%' }}>
+              <label className={styles.label}>Series Description</label>
+              <textarea
+                className={styles.input}
+                style={{ minHeight: 80, resize: 'vertical' }}
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                placeholder="Write a description for this series..."
+              />
             </div>
           </div>
           <div className={styles.submitRow}>
