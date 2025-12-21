@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "./App.css";
 
 const SignInPage = lazy(() => import("./pages/sign-in/Index"));
-const Dashboard = lazy(() => import("./pages/dashboard/Dashboard"));
+const Dashboard = lazy(() => import("./pages/dashboard/Index"));
 
 function App() {
   

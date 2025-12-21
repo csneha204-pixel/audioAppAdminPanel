@@ -133,7 +133,7 @@ const SignInPage: React.FC = () => {
               checked={formData.rememberMe}
               onChange={handleChange}
             /> */}
-            <Link to={"/forgot-password"}>Forget Password?</Link>
+            {/* <Link to={"/forgot-password"}>Forget Password?</Link> */}
           </div>
 
           <div className={styles["form-group"]}>

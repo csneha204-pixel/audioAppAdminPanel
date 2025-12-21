@@ -1,0 +1,77 @@
+.multiSelect {
+  position: relative;
+  width: 100%;
+}
+.label {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.control {
+  background: #191919;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 8px 36px 8px 12px;
+  color: #fff;
+  font-size: 15px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+.control:focus {
+  border: 1.5px solid #a00;
+  box-shadow: 0 0 0 2px #a003;
+}
+.value {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.placeholder {
+  color: #888;
+}
+.chevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #aaa;
+  pointer-events: none;
+}
+.dropdown {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 6px;
+  z-index: 10;
+  box-shadow: 0 4px 24px #0008;
+  padding: 8px 0;
+  max-height: 180px;
+  overflow-y: auto;
+}
+.option {
+  display: flex;
+  align-items: center;
+  padding: 6px 16px;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  gap: 8px;
+}
+.option:hover {
+  background: #191919;
+}
+.option input[type="checkbox"] {
+  accent-color: #a00;
+  margin-right: 8px;
+}

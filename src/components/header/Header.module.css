@@ -1,0 +1,24 @@
+
+.headerBar {
+	width: 100%;
+	height: 40px;
+	background: linear-gradient(180deg, #a00 0%, #222 100%);
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	position: relative;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.spacer {
+	flex: 1;
+}
+
+.userIcon {
+	font-size: 32px;
+	color: #fff;
+	margin-right: 16px;
+	border-radius: 50%;
+	background: #222;
+	box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}

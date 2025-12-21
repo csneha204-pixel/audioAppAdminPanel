@@ -1,0 +1,36 @@
+
+.dashboardContainer {
+	display: flex;
+	height: 100vh;
+	background: #111;
+}
+
+.dashboardMain {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 24px;
+}
+
+@media (max-width: 900px) {
+	.dashboardContainer {
+		flex-direction: column;
+		height: auto;
+	}
+	.dashboardMain {
+		padding: 12px;
+		min-height: 300px;
+	}
+}
+
+@media (max-width: 600px) {
+	.dashboardContainer {
+		flex-direction: column;
+		height: auto;
+	}
+	.dashboardMain {
+		padding: 8px;
+		min-height: 200px;
+	}
+}
