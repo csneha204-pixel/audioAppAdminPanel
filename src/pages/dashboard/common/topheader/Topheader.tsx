@@ -4,6 +4,8 @@ import styles from "./Topheader.module.css";
 import Series from "../series/Series";
 import Episodes from "../episodes/Episodes";
 import Carousels from "../carousels/Carousels";
+// import SavedCarousels from "../carousels/SavedCarousels";
+import SavedCarousels from "../carousels/SavedCarousels";
 
 const options = [
   { label: "SERIES" },
@@ -32,6 +34,9 @@ const Topheader: React.FC = () => {
     // window.history.replaceState({}, document.title);
   }, [navState]);
 
+  // Show SavedCarousels if on that route
+  const isSavedCarouselsPage = /\/carousels\/saved$/.test(location.pathname);
+
   return (
     <>
       <div className={styles.topheaderBar}>
@@ -48,13 +53,14 @@ const Topheader: React.FC = () => {
           </span>
         ))}
       </div>
-      {!isEpisodeListPage && (
+      {!isEpisodeListPage && !isSavedCarouselsPage && (
         <>
           {active === 0 && <Series />}
           {active === 1 && <Episodes preselectedShow={preselectedShow} />}
           {active === 2 && <Carousels />}
         </>
       )}
+      {isSavedCarouselsPage && <SavedCarousels />}
     </>
   );
 };

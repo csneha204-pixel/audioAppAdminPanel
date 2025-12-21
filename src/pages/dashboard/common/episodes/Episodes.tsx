@@ -17,14 +17,23 @@ const seasonOptions = [
 	{ value: "3", label: "Season 3" },
 ];
 
-const Episodes: React.FC = () => {
+interface EpisodesProps {
+	preselectedShow?: string;
+}
+
+const Episodes: React.FC<EpisodesProps> = ({ preselectedShow }) => {
 	const [thumbnail, setThumbnail] = useState<File | null>(null);
-	const [series, setSeries] = useState("");
+	const [series, setSeries] = useState(preselectedShow || "");
 	const [season, setSeason] = useState("");
 	const [episodeNumber, setEpisodeNumber] = useState("");
 	const [episodeName, setEpisodeName] = useState("");
 	const [audio, setAudio] = useState<File | null>(null);
 	const [duration, setDuration] = useState("");
+
+	// If preselectedShow changes (e.g., via navigation), update the series
+	React.useEffect(() => {
+		if (preselectedShow) setSeries(preselectedShow);
+	}, [preselectedShow]);
 
 	return (
 		<form className={styles.episodeForm}>

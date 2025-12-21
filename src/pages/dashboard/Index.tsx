@@ -5,6 +5,8 @@ import Header from "../../components/header/Header";
 import Topheader from "./common/topheader/Topheader";
 import { Routes, Route } from "react-router-dom";
 import EpisodeList from "./common/series/EpisodeList";
+// import SavedCarousels from "./common/carousels/SavedCarousels";
+import SavedCarousels from "./common/carousels/SavedCarousels";
 
 const Dashboard: React.FC = () => {
   // 0: Enter Details, 1: Analytics
@@ -19,6 +21,10 @@ const Dashboard: React.FC = () => {
           <Route
             path="/series/:id/episodes"
             element={<EpisodeList />}
+          />
+          <Route
+            path="/carousels/saved"
+            element={<SavedCarousels />}
           />
           <Route
             index
