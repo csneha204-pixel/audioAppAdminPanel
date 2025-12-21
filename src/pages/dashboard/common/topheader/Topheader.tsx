@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./Topheader.module.css";
 import Series from "../series/Series";
 import Episodes from "../episodes/Episodes";
+import Carousels from "../carousels/Carousels";
 
 const options = [
   { label: "SERIES" },
@@ -30,6 +31,7 @@ const Topheader: React.FC = () => {
       </div>
       {active === 0 && <Series />}
       {active === 1 && <Episodes />}
+      {active === 2 && <Carousels />}
     </>
   );
 };
