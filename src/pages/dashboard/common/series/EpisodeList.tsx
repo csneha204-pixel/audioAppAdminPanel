@@ -16,8 +16,8 @@ const EpisodeList: React.FC = () => {
   const series = location.state?.series || { seriesName: "Unknown Series", id: "" };
 
   const handleAddEpisode = () => {
-    // Go to dashboard, episode tab, with show preselected
-    navigate("/dashboard", { state: { episodeTab: true, preselectedShow: series.id } });
+    // Go to dashboard, episode tab (index 1), with show preselected
+    navigate("/dashboard", { state: { topheaderTab: 1, preselectedShow: series.id } });
   };
 
   return (
