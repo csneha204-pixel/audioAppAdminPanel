@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { FaTimes } from "react-icons/fa";
 import styles from "./Carousels.module.css";
 
 const seriesOptions = [
@@ -19,6 +20,10 @@ const Carousels: React.FC = () => {
 			setShowList([...showList, selectedSeries]);
 			setSelectedSeries("");
 		}
+	};
+
+	const handleDeleteSeries = (seriesValue: string) => {
+		setShowList(showList.filter(s => s !== seriesValue));
 	};
 
 	return (
@@ -66,6 +71,14 @@ const Carousels: React.FC = () => {
 					{showList.map((series, idx) => (
 						<div className={styles.showListItem} key={series}>
 							<span className={styles.showListIndex}>{idx + 1}.</span> {seriesOptions.find(opt => opt.value === series)?.label || series}
+							<button
+								type="button"
+								className={styles.deleteBtn}
+								title="Remove"
+								onClick={() => handleDeleteSeries(series)}
+							>
+								<FaTimes />
+							</button>
 						</div>
 					))}
 				</div>
