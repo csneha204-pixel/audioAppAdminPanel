@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Dropdown from "../../../../components/dropdown/Dropdown";
 import MultiSelectDropdown from "../../../../components/dropdown/MultiSelectDropdown";
@@ -73,19 +74,29 @@ const Series: React.FC = () => {
       // Simulate fetching data for the selected series
       // In real app, fetch from API
       const fakeData = {
-        seriesName: "Sample Series Name",
+        seriesName: "Sample Series",
         image: null,
         language: ["en"],
         genre: ["action"],
         season: "1",
         releaseDate: "2025-12-21",
-        description: "This is a sample description for the series."
+        description: "This is a sample description for the series.",
+        id: value
       };
       setEditData(fakeData);
       setEditMode(true);
     } else {
       setEditMode(false);
       setEditData(null);
+    }
+  };
+
+  const navigate = useNavigate();
+
+  // Handler for Episode List button
+  const handleEpisodeList = () => {
+    if (editData && editData.id) {
+      navigate(`/dashboard/series/${editData.id}/episodes`, { state: { series: editData } });
     }
   };
 
@@ -214,6 +225,9 @@ const Series: React.FC = () => {
           </div>
           <div className={styles.submitRow}>
             <button type="submit" className={styles.submitBtn}>Update</button>
+            <button type="button" className={styles.submitBtn} style={{ marginLeft: 16, background: '#333', color: '#fff', border: '1px solid #a00' }} onClick={handleEpisodeList}>
+              Episode List
+            </button>
           </div>
         </form>
       ) : (

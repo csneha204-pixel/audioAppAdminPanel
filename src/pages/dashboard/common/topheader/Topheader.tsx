@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import styles from "./Topheader.module.css";
 import Series from "../series/Series";
 import Episodes from "../episodes/Episodes";
@@ -12,6 +13,10 @@ const options = [
 
 const Topheader: React.FC = () => {
   const [active, setActive] = useState(0);
+  const location = useLocation();
+
+  // Only show the navigation bar if on episode list route, not the forms
+  const isEpisodeListPage = /\/series\/[^/]+\/episodes$/.test(location.pathname);
 
   return (
     <>
@@ -29,9 +34,13 @@ const Topheader: React.FC = () => {
           </span>
         ))}
       </div>
-      {active === 0 && <Series />}
-      {active === 1 && <Episodes />}
-      {active === 2 && <Carousels />}
+      {!isEpisodeListPage && (
+        <>
+          {active === 0 && <Series />}
+          {active === 1 && <Episodes />}
+          {active === 2 && <Carousels />}
+        </>
+      )}
     </>
   );
 };

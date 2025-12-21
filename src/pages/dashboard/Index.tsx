@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Index.module.css";
-
 import Sidebar from "../../components/sidebar/Sidebar";
 import Header from "../../components/header/Header";
 import Topheader from "./common/topheader/Topheader";
-import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import EpisodeList from "./common/series/EpisodeList";
 
 const Dashboard: React.FC = () => {
   // 0: Enter Details, 1: Analytics
@@ -15,10 +15,21 @@ const Dashboard: React.FC = () => {
       <Sidebar onMenuSelect={setSelectedMenu} selectedMenu={selectedMenu} />
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Header />
-        {selectedMenu === 0 && <Topheader />}
-        <div className={styles.dashboardMain}>
-         
-        </div>
+        <Routes>
+          <Route
+            path="/series/:id/episodes"
+            element={<EpisodeList />}
+          />
+          <Route
+            index
+            element={
+              <>
+                {selectedMenu === 0 && <Topheader />}
+                <div className={styles.dashboardMain}></div>
+              </>
+            }
+          />
+        </Routes>
       </div>
     </div>
   );
