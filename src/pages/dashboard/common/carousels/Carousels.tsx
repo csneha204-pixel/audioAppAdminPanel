@@ -50,7 +50,13 @@ const Carousels: React.FC = () => {
 							onChange={e => setSelectedSeries(e.target.value)}
 						>
 							{seriesOptions.map(opt => (
-								<option key={opt.value} value={opt.value}>{opt.label}</option>
+								<option
+									key={opt.value}
+									value={opt.value}
+									disabled={!!opt.value && showList.includes(opt.value)}
+								>
+									{opt.label}
+								</option>
 							))}
 						</select>
 						<button
