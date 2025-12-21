@@ -121,17 +121,18 @@ const Series: React.FC = () => {
           </div>
           <div className={styles.formCol}>
             <label className={styles.label}>Release Date</label>
-            <div style={{ position: "relative" }}>
+            <div className={styles.inputDateWrapper}>
               <input
                 type="date"
                 value={releaseDate}
                 onChange={e => setReleaseDate(e.target.value)}
-                className={styles.input}
-                style={{ paddingRight: 32 }}
+                className={`${styles.input} ${styles.inputWithIcon}`}
                 id="release-date-input"
+                placeholder="Enter Date (DD/MM/YYYY)"
+                style={{ width: '100%' }}
               />
               <FaRegCalendarAlt
-                style={{ position: "absolute", right: 10, top: 14, pointerEvents: "auto", color: "#aaa", cursor: "pointer" }}
+                className={styles.calendarIcon}
                 onClick={() => {
                   const input = document.getElementById("release-date-input");
                   if (input) (input as HTMLInputElement).showPicker && (input as HTMLInputElement).showPicker();

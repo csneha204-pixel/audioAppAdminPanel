@@ -1,16 +1,22 @@
 
 .dashboardContainer {
 	display: flex;
-	height: 100vh;
+	min-height: 100vh;
 	background: #111;
+	overflow: hidden;
+	position: relative;
 }
 
 .dashboardMain {
 	flex: 1;
 	display: flex;
 	justify-content: center;
-	align-items: center;
-	padding: 24px;
+	align-items: flex-start;
+	padding: 40px 24px 40px 24px;
+	min-height: 100vh;
+	box-sizing: border-box;
+	overflow-y: auto;
+	background: #111;
 }
 
 @media (max-width: 900px) {

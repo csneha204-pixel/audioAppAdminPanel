@@ -1,3 +1,23 @@
+.inputDateWrapper {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	gap: 8px;
+}
+.calendarIcon {
+	color: #fff;
+	font-size: 28px;
+	cursor: pointer;
+	margin-left: 8px;
+	background: #111;
+	border-radius: 6px;
+	padding: 2px 6px 2px 6px;
+	box-sizing: border-box;
+	border: 1px solid #222;
+}
+.inputWithIcon {
+	/* No extra padding needed for outside icon */
+}
 .dropdownWrapper {
 	position: relative;
 	display: flex;
@@ -33,9 +53,9 @@
 	background: #111;
 	border-radius: 24px;
 	padding: 48px 48px 40px 48px;
-	max-width: 540px;
-	min-width: 340px;
-	min-height: 420px;
+	max-width: 700px;
+	min-width: 420px;
+	min-height: 600px;
 	margin: 48px auto 0 auto;
 	box-shadow: 0 0 48px 8px #a00, 0 4px 32px rgba(0,0,0,0.25);
 	display: flex;
@@ -55,8 +75,8 @@
 
 
 .uploadCircle {
-	width: 72px;
-	height: 72px;
+	width: 80px;
+	height: 80px;
 	border-radius: 50%;
 	background: #222;
 	display: flex;
@@ -73,7 +93,10 @@
 }
 .uploadIcon {
 	color: #a00;
-	font-size: 32px;
+	font-size: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 .uploadInput {
 	display: none;
@@ -89,6 +112,7 @@
 	display: flex;
 	gap: 32px;
 	margin-bottom: 12px;
+	align-items: flex-end;
 }
 
 .formCol {

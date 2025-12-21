@@ -60,7 +60,17 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
         <span className={styles.value}>
           {selectedLabels.length > 0 ? selectedLabels.join(", ") : <span className={styles.placeholder}>{placeholder}</span>}
         </span>
-        <span className={styles.chevron}>&#9662;</span>
+        <span
+          className={styles.chevron}
+          onClick={e => { e.stopPropagation(); setOpen(o => !o); }}
+          tabIndex={0}
+          role="button"
+          aria-label="Toggle dropdown"
+          onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.stopPropagation(); setOpen(o => !o); } }}
+          style={{ pointerEvents: 'auto' }}
+        >
+          &#9662;
+        </span>
       </div>
       {open && (
         <div className={styles.dropdown}>

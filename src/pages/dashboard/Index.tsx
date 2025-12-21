@@ -13,7 +13,7 @@ const Dashboard: React.FC = () => {
   return (
     <div className={styles.dashboardContainer}>
       <Sidebar onMenuSelect={setSelectedMenu} selectedMenu={selectedMenu} />
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", height: "100vh" }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Header />
         {selectedMenu === 0 && <Topheader />}
         <div className={styles.dashboardMain}>

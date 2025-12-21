@@ -43,7 +43,11 @@
   transform: translateY(-50%);
   font-size: 18px;
   color: #aaa;
-  pointer-events: none;
+  cursor: pointer;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 .dropdown {
   position: absolute;
