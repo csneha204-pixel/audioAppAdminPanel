@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./Sidebar.module.css";
-import { FaArrowLeft, FaPen, FaRegImage } from "react-icons/fa";
+import {  FaPen } from "react-icons/fa";
+import { TbDeviceAnalytics } from "react-icons/tb";
 
 interface SidebarProps {
   onMenuSelect?: (idx: number) => void;
@@ -25,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onMenuSelect, selectedMenu = 0 }) => 
           className={styles.menuItem + (selectedMenu === 1 ? " " + styles.active : "")}
           onClick={() => onMenuSelect && onMenuSelect(1)}
         >
-          <FaRegImage className={styles.menuIcon} />
+          <TbDeviceAnalytics className={styles.menuIcon} />
           <span className={styles.menuText}>Analytics</span>
         </div>
       </div>
