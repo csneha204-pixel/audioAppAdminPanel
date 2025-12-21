@@ -59,6 +59,46 @@ const Series: React.FC = () => {
     { value: "spiderman", label: "Spiderman" },
   ];
   const [selectedSeries, setSelectedSeries] = useState("");
+  // Simulate fetching series data for update
+  const [editMode, setEditMode] = useState(false);
+  const [editData, setEditData] = useState<any>(null);
+
+  // Handle selecting a pre-saved series for editing
+  const handleSelectSeries = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSelectedSeries(value);
+    if (value) {
+      // Simulate fetching data for the selected series
+      // In real app, fetch from API
+      const fakeData = {
+        image: null,
+        language: ["en"],
+        genre: ["action"],
+        season: "1",
+        releaseDate: "2025-12-21",
+      };
+      setEditData(fakeData);
+      setEditMode(true);
+    } else {
+      setEditMode(false);
+      setEditData(null);
+    }
+  };
+
+  // Handlers for edit form
+  const handleEditChange = (field: string, value: any) => {
+    setEditData((prev: any) => ({ ...prev, [field]: value }));
+  };
+  const handleEditImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setEditData((prev: any) => ({ ...prev, image: e.target.files[0] }));
+    }
+  };
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // handle update submission
+    alert("Series updated!");
+  };
 
   return (
     <>
@@ -67,85 +107,161 @@ const Series: React.FC = () => {
           name="savedSeries"
           label="Pre-saved Series"
           value={selectedSeries}
-          onChange={e => setSelectedSeries(e.target.value)}
+          onChange={handleSelectSeries}
           options={savedSeriesOptions}
           className={styles.select}
         />
         <FaChevronDown style={{ position: "absolute", right: 10, top: 38, pointerEvents: "none", color: "#aaa" }} />
       </div>
-      <form className={styles.seriesForm} onSubmit={handleSubmit}>
-        <div className={styles.uploadContainer}>
-          <label className={styles.uploadCircle} title="Upload Image">
-            <FaCloudUploadAlt className={styles.uploadIcon} />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className={styles.uploadInput}
-            />
-          </label>
-          {image && <span className={styles.fileName}>{image.name}</span>}
-        </div>
-        <div className={styles.formRow}>
-          <div className={styles.formCol}>
-            <label className={styles.label}>Language</label>
-            <MultiSelectDropdown
-              options={languageOptions}
-              value={language}
-              onChange={setLanguage}
-              placeholder="Please Select"
-              className={styles.compactSelect}
-            />
-          </div>
-          <div className={styles.formCol}>
-            <label className={styles.label}>Season</label>
-            <input
-              type="text"
-              value={season}
-              onChange={e => setSeason(e.target.value)}
-              className={styles.input}
-              placeholder="Season"
-            />
-          </div>
-        </div>
-        <div className={styles.formRow}>
-          <div className={styles.formCol}>
-            <label className={styles.label}>Genres</label>
-            <MultiSelectDropdown
-              options={genreOptions}
-              value={genre}
-              onChange={setGenre}
-              placeholder="Please Select"
-              className={styles.compactSelect}
-            />
-          </div>
-          <div className={styles.formCol}>
-            <label className={styles.label}>Release Date</label>
-            <div className={styles.inputDateWrapper}>
+      {editMode && editData ? (
+        <form className={styles.seriesForm} onSubmit={handleEditSubmit}>
+          <div className={styles.uploadContainer}>
+            <label className={styles.uploadCircle} title="Upload Image">
+              <FaCloudUploadAlt className={styles.uploadIcon} />
               <input
-                type="date"
-                value={releaseDate}
-                onChange={e => setReleaseDate(e.target.value)}
-                className={`${styles.input} ${styles.inputWithIcon}`}
-                id="release-date-input"
-                placeholder="Enter Date (DD/MM/YYYY)"
-                style={{ width: '100%' }}
+                type="file"
+                accept="image/*"
+                onChange={handleEditImageChange}
+                className={styles.uploadInput}
               />
-              <FaRegCalendarAlt
-                className={styles.calendarIcon}
-                onClick={() => {
-                  const input = document.getElementById("release-date-input");
-                  if (input) (input as HTMLInputElement).showPicker && (input as HTMLInputElement).showPicker();
-                  else if (input) (input as HTMLInputElement).focus();
-                }}
+            </label>
+            {editData.image && <span className={styles.fileName}>{typeof editData.image === 'string' ? editData.image : editData.image.name}</span>}
+          </div>
+          <div className={styles.formRow}>
+            <div className={styles.formCol}>
+              <label className={styles.label}>Language</label>
+              <MultiSelectDropdown
+                options={languageOptions}
+                value={editData.language}
+                onChange={val => handleEditChange("language", val)}
+                placeholder="Please Select"
+                className={styles.compactSelect}
+              />
+            </div>
+            <div className={styles.formCol}>
+              <label className={styles.label}>Season</label>
+              <input
+                type="text"
+                value={editData.season}
+                onChange={e => handleEditChange("season", e.target.value)}
+                className={styles.input}
+                placeholder="Season"
               />
             </div>
           </div>
-        </div>
-        <div className={styles.submitRow}>
-          <button type="submit" className={styles.submitBtn}>Submit</button>
-        </div>
-      </form>
+          <div className={styles.formRow}>
+            <div className={styles.formCol}>
+              <label className={styles.label}>Genres</label>
+              <MultiSelectDropdown
+                options={genreOptions}
+                value={editData.genre}
+                onChange={val => handleEditChange("genre", val)}
+                placeholder="Please Select"
+                className={styles.compactSelect}
+              />
+            </div>
+            <div className={styles.formCol}>
+              <label className={styles.label}>Release Date</label>
+              <div className={styles.inputDateWrapper}>
+                <input
+                  type="date"
+                  value={editData.releaseDate}
+                  onChange={e => handleEditChange("releaseDate", e.target.value)}
+                  className={`${styles.input} ${styles.inputWithIcon}`}
+                  id="release-date-input-edit"
+                  placeholder="Enter Date (DD/MM/YYYY)"
+                  style={{ width: '100%' }}
+                />
+                <FaRegCalendarAlt
+                  className={styles.calendarIcon}
+                  onClick={() => {
+                    const input = document.getElementById("release-date-input-edit");
+                    if (input) (input as HTMLInputElement).showPicker && (input as HTMLInputElement).showPicker();
+                    else if (input) (input as HTMLInputElement).focus();
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+          <div className={styles.submitRow}>
+            <button type="submit" className={styles.submitBtn}>Update</button>
+          </div>
+        </form>
+      ) : (
+        <form className={styles.seriesForm} onSubmit={handleSubmit}>
+          <div className={styles.uploadContainer}>
+            <label className={styles.uploadCircle} title="Upload Image">
+              <FaCloudUploadAlt className={styles.uploadIcon} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className={styles.uploadInput}
+              />
+            </label>
+            {image && <span className={styles.fileName}>{image.name}</span>}
+          </div>
+          <div className={styles.formRow}>
+            <div className={styles.formCol}>
+              <label className={styles.label}>Language</label>
+              <MultiSelectDropdown
+                options={languageOptions}
+                value={language}
+                onChange={setLanguage}
+                placeholder="Please Select"
+                className={styles.compactSelect}
+              />
+            </div>
+            <div className={styles.formCol}>
+              <label className={styles.label}>Season</label>
+              <input
+                type="text"
+                value={season}
+                onChange={e => setSeason(e.target.value)}
+                className={styles.input}
+                placeholder="Season"
+              />
+            </div>
+          </div>
+          <div className={styles.formRow}>
+            <div className={styles.formCol}>
+              <label className={styles.label}>Genres</label>
+              <MultiSelectDropdown
+                options={genreOptions}
+                value={genre}
+                onChange={setGenre}
+                placeholder="Please Select"
+                className={styles.compactSelect}
+              />
+            </div>
+            <div className={styles.formCol}>
+              <label className={styles.label}>Release Date</label>
+              <div className={styles.inputDateWrapper}>
+                <input
+                  type="date"
+                  value={releaseDate}
+                  onChange={e => setReleaseDate(e.target.value)}
+                  className={`${styles.input} ${styles.inputWithIcon}`}
+                  id="release-date-input"
+                  placeholder="Enter Date (DD/MM/YYYY)"
+                  style={{ width: '100%' }}
+                />
+                <FaRegCalendarAlt
+                  className={styles.calendarIcon}
+                  onClick={() => {
+                    const input = document.getElementById("release-date-input");
+                    if (input) (input as HTMLInputElement).showPicker && (input as HTMLInputElement).showPicker();
+                    else if (input) (input as HTMLInputElement).focus();
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+          <div className={styles.submitRow}>
+            <button type="submit" className={styles.submitBtn}>Submit</button>
+          </div>
+        </form>
+      )}
     </>
   );
 };
