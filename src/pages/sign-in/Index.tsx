@@ -83,9 +83,15 @@ const SignInPage: React.FC = () => {
 
       // Adjusted condition to match backend's actual response
       if (response.data?.message === "Login successfully done") {
+        const user = response.data.user;
+        if (user?.role !== "admin") {
+          toast.error("Access denied. Only admin users are allowed.");
+          setLoading(false);
+          return;
+        }
         console.log("Sign in successful!", response.data);
         localStorage.setItem("accessToken", response.data.accessToken);
-        localStorage.setItem("userData", JSON.stringify(response.data.user));
+        localStorage.setItem("userData", JSON.stringify(user));
         navigate("/dashboard");
       }
     } catch (error: any) {
