@@ -8,6 +8,7 @@
 .form-label {
   font-size: var(--font-size-3);
   display: block;
+  color: #D7D7D7;
 }
 
 .form-label .required {

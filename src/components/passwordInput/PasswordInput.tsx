@@ -48,7 +48,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({ value, error, onChange, t
           onKeyDown={handleKeyPress}
           style={{ cursor: "pointer" }}
         >
-          {showPassword ? <FaEye /> : <FaEyeSlash />}
+          {showPassword ? <FaEye color="#d7d7d7" /> : <FaEyeSlash color="#d7d7d7" />}
         </span>
       </div>
       {error && <div className={styles["text-danger"]}>{error}</div>}
