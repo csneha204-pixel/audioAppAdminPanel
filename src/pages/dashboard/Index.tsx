@@ -17,23 +17,15 @@ const Dashboard: React.FC = () => {
       <Sidebar onMenuSelect={setSelectedMenu} selectedMenu={selectedMenu} />
       <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Header />
+        <Topheader />
         <Routes>
           <Route
             path="/series/:id/episodes"
             element={<EpisodeList />}
           />
           <Route
-            path="/carousels/saved"
-            element={<SavedCarousels />}
-          />
-          <Route
             index
-            element={
-              <>
-                {selectedMenu === 0 && <Topheader />}
-                <div className={styles.dashboardMain}></div>
-              </>
-            }
+            element={<div className={styles.dashboardMain}></div>}
           />
         </Routes>
       </div>
