@@ -7,6 +7,10 @@
 	align-items: center;
 	padding-left: 32px;
 	gap: 32px;
+	position: sticky;
+	top: 40px;
+	left: 0;
+	z-index: 150;
 }
 
 .topheaderOption {

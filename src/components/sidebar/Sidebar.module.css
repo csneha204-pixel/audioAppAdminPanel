@@ -5,9 +5,12 @@
 	background: #111;
 	display: flex;
 	flex-direction: column;
-	position: relative;
+	position: sticky;
+	top: 0;
+	left: 0;
 	min-width: 120px;
 	transition: width 0.2s;
+	z-index: 100;
 }
 
 @media (max-width: 900px) {
