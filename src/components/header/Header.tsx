@@ -4,6 +4,8 @@ import { FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { CONFIG } from "../../utils/config/config";
 import { URLS } from "../../utils/api-endpoints/endpoint";
+import { getRequest } from "../../utils/core-api-functions/coreApiFunctions";
+import type { UserData } from "../../utils/types/Type";
 
 
 const Header: React.FC = () => {
@@ -12,14 +14,37 @@ const Header: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Simulate fetching user email (replace with real API call if needed)
+  // Fetch user email from API using axios utility and correct typing
   useEffect(() => {
-    // In real app, fetch user details from API or context
-    // Example fetch:
-    // fetch(`${CONFIG.API_BASE_URL}/${URLS.user.getUserDetails}`, { credentials: 'include' })
-    //   .then(res => res.json())
-    //   .then(data => setUserEmail(data.email));
-    setUserEmail("user@example.com");
+    const fetchUser = async () => {
+      try {
+        const data = await getRequest<any>(`${CONFIG.API_BASE_URL}/${URLS.user.getUserDetails}`);
+        if (data && data.userData && data.userData.email) {
+          setUserEmail(data.userData.email);
+        } else {
+          // fallback to localStorage
+          const userDataStr = localStorage.getItem("userData");
+          if (userDataStr) {
+            try {
+              const userData = JSON.parse(userDataStr);
+              if (userData && userData.email) setUserEmail(userData.email);
+              else setUserEmail("");
+            } catch { setUserEmail(""); }
+          } else setUserEmail("");
+        }
+      } catch {
+        // fallback to localStorage
+        const userDataStr = localStorage.getItem("userData");
+        if (userDataStr) {
+          try {
+            const userData = JSON.parse(userDataStr);
+            if (userData && userData.email) setUserEmail(userData.email);
+            else setUserEmail("");
+          } catch { setUserEmail(""); }
+        } else setUserEmail("");
+      }
+    };
+    fetchUser();
   }, []);
 
   // Close dropdown on outside click
