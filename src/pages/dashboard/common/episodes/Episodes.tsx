@@ -1,21 +1,11 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Episodes.module.css";
 import { FaCloudUploadAlt } from "react-icons/fa";
-
-const seriesOptions = [
-	{ value: "", label: "Select Series" },
-	{ value: "avengers", label: "Avengers" },
-	{ value: "batman", label: "Batman" },
-	{ value: "superman", label: "Superman" },
-];
-
-const seasonOptions = [
-	{ value: "", label: "Select Season" },
-	{ value: "1", label: "Season 1" },
-	{ value: "2", label: "Season 2" },
-	{ value: "3", label: "Season 3" },
-];
+import { getRequest, postRequest } from "../../../../utils/core-api-functions/coreApiFunctions";
+import { URLS } from "../../../../utils/api-endpoints/endpoint";
+import { CONFIG } from "../../../../utils/config/config";
+import { toast } from "react-toastify";
 
 interface EpisodesProps {
 	preselectedShow?: string;
@@ -23,23 +13,125 @@ interface EpisodesProps {
 
 const Episodes: React.FC<EpisodesProps> = ({ preselectedShow }) => {
 	const [thumbnail, setThumbnail] = useState<File | null>(null);
+	const [seriesOptions, setSeriesOptions] = useState<{ value: string; label: string }[]>([]);
+	const [seasonOptions, setSeasonOptions] = useState<{ value: string; label: string; name: string }[]>([]);
 	const [series, setSeries] = useState(preselectedShow || "");
 	const [season, setSeason] = useState("");
 	const [episodeNumber, setEpisodeNumber] = useState("");
 	const [episodeName, setEpisodeName] = useState("");
 	const [audio, setAudio] = useState<File | null>(null);
 	const [duration, setDuration] = useState("");
+	const [loading, setLoading] = useState(false);
+
+	// Fetch all series on mount
+	useEffect(() => {
+		const fetchSeries = async () => {
+			try {
+				const response = await getRequest<any>(`${CONFIG.API_BASE_URL}/file/series`);
+				if (response && Array.isArray(response)) {
+					const options = response.map((s: any) => ({
+						value: s.show_id,
+						label: s.series_name,
+					}));
+					setSeriesOptions([{ value: "", label: "Select Series" }, ...options]);
+				}
+			} catch (error) {
+				console.error("Error fetching series:", error);
+				toast.error("Failed to load series");
+			}
+		};
+		fetchSeries();
+	}, []);
+
+	// Fetch seasons when series is selected
+	useEffect(() => {
+		const fetchSeasons = async () => {
+			if (!series) {
+				setSeasonOptions([{ value: "", label: "Select Season", name: "" }]);
+				setSeason("");
+				return;
+			}
+
+			try {
+				const response = await getRequest<any>(`${CONFIG.API_BASE_URL}/file/series/${series}/seasons`);
+				if (response && response.seasons && Array.isArray(response.seasons)) {
+					const options = response.seasons.map((s: any) => ({
+						value: s.season_id,
+						label: s.season_name,
+						name: s.season_name
+					}));
+					setSeasonOptions([{ value: "", label: "Select Season", name: "" }, ...options]);
+				} else {
+					setSeasonOptions([{ value: "", label: "No seasons available", name: "" }]);
+				}
+			} catch (error) {
+				console.error("Error fetching seasons:", error);
+				toast.error("Failed to load seasons");
+				setSeasonOptions([{ value: "", label: "Select Season", name: "" }]);
+			}
+		};
+		fetchSeasons();
+	}, [series]);
 
 	// If preselectedShow changes (e.g., via navigation), update the series
-	React.useEffect(() => {
+	useEffect(() => {
 		if (preselectedShow) setSeries(preselectedShow);
 	}, [preselectedShow]);
 
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+
+		if (!thumbnail || !series || !season || !episodeNumber || !episodeName || !audio || !duration) {
+			toast.error("All fields are required.");
+			return;
+		}
+
+		const formData = new FormData();
+		formData.append("image", thumbnail);
+		formData.append("audio", audio);
+		formData.append("episode_no", episodeNumber);
+		formData.append("episode_name", episodeName);
+		formData.append("duration", duration);
+
+		setLoading(true);
+		try {
+			await postRequest(
+				`${CONFIG.API_BASE_URL}/file/series/${series}/seasons/${season}/episodes`,
+				formData,
+				{
+					headers: {
+						"Content-Type": "multipart/form-data",
+					},
+				}
+			);
+			toast.success("Episode created successfully!");
+			// Reset form
+			setThumbnail(null);
+			setEpisodeNumber("");
+			setEpisodeName("");
+			setAudio(null);
+			setDuration("");
+		} catch (error: any) {
+			console.error("Error creating episode:", error);
+			toast.error(error.response?.data?.error || "Error creating episode");
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return (
-		<form className={styles.episodeForm}>
+		<form className={styles.episodeForm} onSubmit={handleSubmit}>
 			<div className={styles.uploadContainer}>
 				<label className={styles.uploadCircle} title="Upload Thumbnail">
-					<FaCloudUploadAlt className={styles.uploadIcon} />
+					{thumbnail ? (
+						<img
+							src={URL.createObjectURL(thumbnail)}
+							alt="Thumbnail Preview"
+							style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }}
+						/>
+					) : (
+						<FaCloudUploadAlt className={styles.uploadIcon} />
+					)}
 					<input
 						type="file"
 						accept="image/*"
@@ -123,7 +215,9 @@ const Episodes: React.FC<EpisodesProps> = ({ preselectedShow }) => {
 				</div>
 			</div>
 			<div className={styles.submitRow}>
-				<button type="submit" className={styles.submitBtn}>Submit</button>
+				<button type="submit" className={styles.submitBtn} disabled={loading}>
+					{loading ? "Submitting..." : "Submit"}
+				</button>
 			</div>
 		</form>
 	);
