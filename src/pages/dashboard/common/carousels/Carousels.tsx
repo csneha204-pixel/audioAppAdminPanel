@@ -1,32 +1,79 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import styles from "./Carousels.module.css";
-
-const seriesOptions = [
-	{ value: "", label: "Select Series" },
-	{ value: "avengers", label: "Avengers" },
-	{ value: "batman", label: "Batman" },
-	{ value: "superman", label: "Superman" },
-];
+import { getRequest, postRequest } from "../../../../utils/core-api-functions/coreApiFunctions";
+import { CONFIG } from "../../../../utils/config/config";
+import { URLS } from "../../../../utils/api-endpoints/endpoint";
+import { toast } from "react-toastify";
 
 
 const Carousels: React.FC = () => {
 	const [title, setTitle] = useState("");
+	const [seriesOptions, setSeriesOptions] = useState<{ value: string; label: string }[]>([{ value: "", label: "Select Series" }]);
 	const [selectedSeries, setSelectedSeries] = useState("");
-	const [showList, setShowList] = useState<string[]>([]);
+	const [showList, setShowList] = useState<{ id: string; name: string }[]>([]);
+	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		const fetchSeries = async () => {
+			try {
+				const response = await getRequest<any>(`${CONFIG.API_BASE_URL}/${URLS.file.series}`);
+				if (response && Array.isArray(response)) {
+					const options = response.map((s: any) => ({ value: s.show_id, label: s.series_name }));
+					setSeriesOptions([{ value: "", label: "Select Series" }, ...options]);
+				}
+			} catch (error) {
+				console.error("Error fetching series:", error);
+				toast.error("Failed to load series");
+			}
+		};
+		fetchSeries();
+	}, []);
+
 	const handleAddSeries = () => {
-		if (selectedSeries && !showList.includes(selectedSeries)) {
-			setShowList([...showList, selectedSeries]);
+		if (selectedSeries && !showList.find(s => s.id === selectedSeries)) {
+			const found = seriesOptions.find(opt => opt.value === selectedSeries);
+			setShowList([...showList, { id: selectedSeries, name: found?.label || selectedSeries }]);
 			setSelectedSeries("");
 		}
 	};
 
 	const handleDeleteSeries = (seriesValue: string) => {
-		setShowList(showList.filter(s => s !== seriesValue));
+		setShowList(showList.filter(s => s.id !== seriesValue));
+	};
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		if (!title.trim()) {
+			toast.error("Please enter a carousel title");
+			return;
+		}
+		if (showList.length === 0) {
+			toast.error("Please add at least one series");
+			return;
+		}
+
+		setLoading(true);
+		try {
+			await postRequest(
+				`${CONFIG.API_BASE_URL}/file/carousels`,
+				{
+					name: title,
+					series_ids: showList.map(s => s.id),
+				},
+			);
+			toast.success("Carousel created successfully!");
+			setTitle("");
+			setShowList([]);
+		} catch (error: any) {
+			console.error("Error creating carousel:", error);
+			toast.error(error.response?.data?.error || "Failed to create carousel");
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	const handleSavedCarousels = () => {
@@ -40,7 +87,7 @@ const Carousels: React.FC = () => {
 					Saved Carousels
 				</button>
 			</div>
-			<form className={styles.carouselForm} onSubmit={e => e.preventDefault()}>
+			<form className={styles.carouselForm} onSubmit={handleSubmit}>
 				<div className={styles.formRow}>
 					<div className={styles.formCol}>
 						<label className={styles.label}>Carousel Title</label>
@@ -66,7 +113,7 @@ const Carousels: React.FC = () => {
 									<option
 										key={opt.value}
 										value={opt.value}
-										disabled={!!opt.value && showList.includes(opt.value)}
+										disabled={!!opt.value && showList.some(s => s.id === opt.value)}
 									>
 										{opt.label}
 									</option>
@@ -88,13 +135,13 @@ const Carousels: React.FC = () => {
 					<div className={styles.showList}>
 						{showList.length === 0 && <span className={styles.emptyList}>No series added yet.</span>}
 						{showList.map((series, idx) => (
-							<div className={styles.showListItem} key={series}>
-								<span className={styles.showListIndex}>{idx + 1}.</span> {seriesOptions.find(opt => opt.value === series)?.label || series}
+							<div className={styles.showListItem} key={series.id}>
+								<span className={styles.showListIndex}>{idx + 1}.</span> {series.name}
 								<button
 									type="button"
 									className={styles.deleteBtn}
 									title="Remove"
-									onClick={() => handleDeleteSeries(series)}
+									onClick={() => handleDeleteSeries(series.id)}
 								>
 									<FaTimes />
 								</button>
@@ -103,7 +150,9 @@ const Carousels: React.FC = () => {
 					</div>
 				   </div>
 				   <div className={styles.submitRow}>
-					   <button type="submit" className={styles.submitBtn}>Submit</button>
+					   <button type="submit" className={styles.submitBtn} disabled={loading}>
+					   	{loading ? "Submitting..." : "Submit"}
+					   </button>
 				   </div>
 			   </form>
 		   </>
