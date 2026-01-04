@@ -4,8 +4,6 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Header from "../../components/header/Header";
 import Topheader from "./common/topheader/Topheader";
 import { Routes, Route } from "react-router-dom";
-import EpisodeList from "./common/series/EpisodeList";
-// import SavedCarousels from "./common/carousels/SavedCarousels";
 import SavedCarousels from "./common/carousels/SavedCarousels";
 
 const Dashboard: React.FC = () => {
@@ -19,10 +17,7 @@ const Dashboard: React.FC = () => {
         <Header />
         <Topheader />
         <Routes>
-          <Route
-            path="/series/:id/episodes"
-            element={<EpisodeList />}
-          />
+     
           <Route
             index
             element={<div className={styles.dashboardMain}></div>}

@@ -7,5 +7,9 @@ export const URLS = {
     verifyOtp: "auth/verify-otp",
     refreshToken: "auth/refresh",
     getUserDetails: "auth/me",
+  },
+  file: {
+    series: "file/series",
+    languages: "file/languages",
   }
 };

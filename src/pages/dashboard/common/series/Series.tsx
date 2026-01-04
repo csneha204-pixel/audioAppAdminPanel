@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Dropdown from "../../../../components/dropdown/Dropdown";
@@ -6,29 +6,38 @@ import MultiSelectDropdown from "../../../../components/dropdown/MultiSelectDrop
 import { FaChevronDown, FaRegCalendarAlt } from "react-icons/fa";
 import styles from "./Series.module.css";
 import { FaCloudUploadAlt } from "react-icons/fa";
-
-const languageOptions = [
-  { value: "en", label: "English" },
-  { value: "hi", label: "Hindi" },
-  { value: "es", label: "Spanish" },
-  { value: "fr", label: "French" },
-];
-
-const genreOptions = [
-  { value: "action", label: "Action" },
-  { value: "drama", label: "Drama" },
-  { value: "comedy", label: "Comedy" },
-  { value: "sci-fi", label: "Sci-Fi" },
-];
+import { getRequest, postRequest } from "../../../../utils/core-api-functions/coreApiFunctions";
+import { URLS } from "../../../../utils/api-endpoints/endpoint";
+import { CONFIG } from "../../../../utils/config/config";
+import { toast } from "react-toastify";
 
 const Series: React.FC = () => {
   const [image, setImage] = useState<File | null>(null);
   const [seriesName, setSeriesName] = useState("");
-  const [language, setLanguage] = useState<string[]>([]);
-  const [genre, setGenre] = useState<string[]>([]);
-  const [season, setSeason] = useState("");
+  const [language, setLanguage] = useState("");
+  const [languages, setLanguages] = useState<{ value: string; label: string }[]>([]);
+  const [genre, setGenre] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
   const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      try {
+        const response = await getRequest<any>(`${CONFIG.API_BASE_URL}/${URLS.file.languages}`);
+        if (response && Array.isArray(response)) {
+          const options = response.map((lang: any) => ({
+            value: lang._id || lang.language_id,
+            label: lang.name,
+          }));
+          setLanguages([{ value: "", label: "Select Language" }, ...options]);
+        }
+      } catch (error) {
+        console.error("Error fetching languages:", error);
+        toast.error("Failed to load languages");
+      }
+    };
+    fetchLanguages();
+  }, []);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -36,21 +45,42 @@ const Series: React.FC = () => {
     }
   };
 
-  // For Dropdown multi-select, handle as comma-separated string
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = Array.from(e.target.selectedOptions, option => option.value);
-    setLanguage(selected);
-  };
-
-  const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = Array.from(e.target.selectedOptions, option => option.value);
-    setGenre(selected);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // handle form submission
-    alert("Submitted!");
+    
+    if (!image || !seriesName || !genre || !language || !description || !releaseDate) {
+      toast.error("All fields are required.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("series_name", seriesName);
+    // Split genres by comma and trim whitespace
+    const genresArray = genre.split(",").map(g => g.trim()).filter(g => g !== "");
+    genresArray.forEach(g => formData.append("genres[]", g));
+    formData.append("language_id", language);
+    formData.append("description", description);
+    formData.append("release_date", releaseDate);
+
+    try {
+      await postRequest(`${CONFIG.API_BASE_URL}/${URLS.file.series}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      toast.success("Series created successfully!");
+      // Reset form
+      setImage(null);
+      setSeriesName("");
+      setLanguage("");
+      setGenre("");
+      setReleaseDate("");
+      setDescription("");
+    } catch (error: any) {
+      console.error("Error creating series:", error);
+      toast.error(error.response?.data?.error || "Error creating series");
+    }
   };
 
   // Dummy data for previously saved series
@@ -77,8 +107,7 @@ const Series: React.FC = () => {
         seriesName: "Sample Series",
         image: null,
         language: ["en"],
-        genre: ["action"],
-        season: "1",
+        genre: "action",
         releaseDate: "2025-12-21",
         description: "This is a sample description for the series.",
         id: value
@@ -158,36 +187,26 @@ const Series: React.FC = () => {
           <div className={styles.formRow}>
             <div className={styles.formCol}>
               <label className={styles.label}>Language</label>
-              <MultiSelectDropdown
-                options={languageOptions}
-                value={editData.language}
-                onChange={val => handleEditChange("language", val)}
-                placeholder="Please Select"
+              <Dropdown
+                name="language"
+                value={editData.language_id || ""}
+                onChange={e => handleEditChange("language_id", e.target.value)}
+                options={languages}
                 className={styles.compactSelect}
               />
             </div>
             <div className={styles.formCol}>
-              <label className={styles.label}>Season</label>
+              <label className={styles.label}>Genres</label>
               <input
                 type="text"
-                value={editData.season}
-                onChange={e => handleEditChange("season", e.target.value)}
                 className={styles.input}
-                placeholder="Season"
+                value={editData.genre || ''}
+                onChange={e => handleEditChange('genre', e.target.value)}
+                placeholder="Enter genres (comma separated)"
               />
             </div>
           </div>
           <div className={styles.formRow}>
-            <div className={styles.formCol}>
-              <label className={styles.label}>Genres</label>
-              <MultiSelectDropdown
-                options={genreOptions}
-                value={editData.genre}
-                onChange={val => handleEditChange("genre", val)}
-                placeholder="Please Select"
-                className={styles.compactSelect}
-              />
-            </div>
             <div className={styles.formCol}>
               <label className={styles.label}>Release Date</label>
               <div className={styles.inputDateWrapper}>
@@ -259,36 +278,26 @@ const Series: React.FC = () => {
           <div className={styles.formRow}>
             <div className={styles.formCol}>
               <label className={styles.label}>Language</label>
-              <MultiSelectDropdown
-                options={languageOptions}
+              <Dropdown
+                name="language"
                 value={language}
-                onChange={setLanguage}
-                placeholder="Please Select"
+                onChange={e => setLanguage(e.target.value)}
+                options={languages}
                 className={styles.compactSelect}
               />
             </div>
             <div className={styles.formCol}>
-              <label className={styles.label}>Season</label>
+              <label className={styles.label}>Genres</label>
               <input
                 type="text"
-                value={season}
-                onChange={e => setSeason(e.target.value)}
                 className={styles.input}
-                placeholder="Season"
+                value={genre}
+                onChange={e => setGenre(e.target.value)}
+                placeholder="Enter genres (comma separated)"
               />
             </div>
           </div>
           <div className={styles.formRow}>
-            <div className={styles.formCol}>
-              <label className={styles.label}>Genres</label>
-              <MultiSelectDropdown
-                options={genreOptions}
-                value={genre}
-                onChange={setGenre}
-                placeholder="Please Select"
-                className={styles.compactSelect}
-              />
-            </div>
             <div className={styles.formCol}>
               <label className={styles.label}>Release Date</label>
               <div className={styles.inputDateWrapper}>

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styles from "./Topheader.module.css";
 import Series from "../series/Series";
+// import Seasons from "../series/Seasons";
+import Seasons from "../series/Seasons";
 import Episodes from "../episodes/Episodes";
 import Carousels from "../carousels/Carousels";
 // import SavedCarousels from "../carousels/SavedCarousels";
@@ -9,6 +11,7 @@ import SavedCarousels from "../carousels/SavedCarousels";
 
 const options = [
   { label: "SERIES" },
+  { label: "SEASON" },
   { label: "EPISODES" },
   { label: "CAROUSELS" },
 ];
@@ -56,8 +59,9 @@ const Topheader: React.FC = () => {
       {!isEpisodeListPage && !isSavedCarouselsPage && (
         <>
           {active === 0 && <Series />}
-          {active === 1 && <Episodes preselectedShow={preselectedShow} />}
-          {active === 2 && <Carousels />}
+          {active === 1 && <Seasons />}
+          {active === 2 && <Episodes preselectedShow={preselectedShow} />}
+          {active === 3 && <Carousels />}
         </>
       )}
       {isSavedCarouselsPage && <SavedCarousels />}
