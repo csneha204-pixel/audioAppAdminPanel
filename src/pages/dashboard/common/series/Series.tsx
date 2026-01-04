@@ -16,6 +16,7 @@ const Series: React.FC = () => {
   const [seriesName, setSeriesName] = useState("");
   const [language, setLanguage] = useState("");
   const [languages, setLanguages] = useState<{ value: string; label: string }[]>([]);
+  const [seriesOptions, setSeriesOptions] = useState<{ value: string; label: string }[]>([]);
   const [genre, setGenre] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
   const [description, setDescription] = useState("");
@@ -36,7 +37,25 @@ const Series: React.FC = () => {
         toast.error("Failed to load languages");
       }
     };
+
+    const fetchSeries = async () => {
+      try {
+        const response = await getRequest<any>(`${CONFIG.API_BASE_URL}/${URLS.file.series}`);
+        if (response && Array.isArray(response)) {
+          const options = response.map((s: any) => ({
+            value: s._id,
+            label: s.series_name,
+          }));
+          setSeriesOptions([{ value: "", label: "Select a Series" }, ...options]);
+        }
+      } catch (error) {
+        console.error("Error fetching series:", error);
+        toast.error("Failed to load series");
+      }
+    };
+
     fetchLanguages();
+    fetchSeries();
   }, []);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,37 +102,36 @@ const Series: React.FC = () => {
     }
   };
 
-  // Dummy data for previously saved series
-  const savedSeriesOptions = [
-    { value: "", label: "Select a Series" },
-    { value: "avengers", label: "Avengers" },
-    { value: "batman", label: "Batman" },
-    { value: "superman", label: "Superman" },
-    { value: "spiderman", label: "Spiderman" },
-  ];
   const [selectedSeries, setSelectedSeries] = useState("");
-  // Simulate fetching series data for update
   const [editMode, setEditMode] = useState(false);
   const [editData, setEditData] = useState<any>(null);
+  const [imageLoadError, setImageLoadError] = useState(false);
 
   // Handle selecting a pre-saved series for editing
-  const handleSelectSeries = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSelectSeries = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setSelectedSeries(value);
+    setImageLoadError(false);
     if (value) {
-      // Simulate fetching data for the selected series
-      // In real app, fetch from API
-      const fakeData = {
-        seriesName: "Sample Series",
-        image: null,
-        language: ["en"],
-        genre: "action",
-        releaseDate: "2025-12-21",
-        description: "This is a sample description for the series.",
-        id: value
-      };
-      setEditData(fakeData);
-      setEditMode(true);
+      try {
+        const response = await getRequest<any>(`${CONFIG.API_BASE_URL}/${URLS.file.series}/${value}`);
+        if (response) {
+          const imageData = response.url || response.image || response.image_url || response.file || response.thumbnail;
+          setEditData({
+            seriesName: response.series_name || response.name,
+            image: imageData,
+            language_id: response.language_id,
+            genre: response.genres ? response.genres.join(", ") : "",
+            releaseDate: response.release_date ? response.release_date.split('T')[0] : "",
+            description: response.description,
+            id: response._id
+          });
+          setEditMode(true);
+        }
+      } catch (error) {
+        console.error("Error fetching series details:", error);
+        toast.error("Failed to load series details");
+      }
     } else {
       setEditMode(false);
       setEditData(null);
@@ -136,6 +154,7 @@ const Series: React.FC = () => {
   const handleEditImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files[0]) {
+      setImageLoadError(false);
       setEditData((prev: any) => ({ ...prev, image: files[0] }));
     }
   };
@@ -153,7 +172,7 @@ const Series: React.FC = () => {
           label="Pre-saved Series"
           value={selectedSeries}
           onChange={handleSelectSeries}
-          options={savedSeriesOptions}
+          options={seriesOptions}
           className={styles.select}
         />
         <FaChevronDown style={{ position: "absolute", right: 10, top: 38, pointerEvents: "none", color: "#aaa" }} />
@@ -162,7 +181,32 @@ const Series: React.FC = () => {
         <form className={styles.seriesForm} onSubmit={handleEditSubmit}>
           <div className={styles.uploadContainer}>
             <label className={styles.uploadCircle} title="Upload Image">
-              <FaCloudUploadAlt className={styles.uploadIcon} />
+              {editData.image && !imageLoadError ? (
+                typeof editData.image === 'string' ? (
+                  <div 
+                    style={{ 
+                      width: "100%", 
+                      height: "100%", 
+                      borderRadius: "50%", 
+                      backgroundImage: `url(${editData.image})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center"
+                    }}
+                    onError={() => {
+                      console.error("Failed to load image from:", editData.image);
+                      setImageLoadError(true);
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={URL.createObjectURL(editData.image)}
+                    alt="Series Preview"
+                    style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }}
+                  />
+                )
+              ) : (
+                <FaCloudUploadAlt className={styles.uploadIcon} />
+              )}
               <input
                 type="file"
                 accept="image/*"
@@ -170,7 +214,7 @@ const Series: React.FC = () => {
                 className={styles.uploadInput}
               />
             </label>
-            {editData.image && <span className={styles.fileName}>{typeof editData.image === 'string' ? editData.image : editData.image.name}</span>}
+            {editData.image && <span className={styles.fileName}>{typeof editData.image === 'string' ? 'Current Image' : editData.image.name}</span>}
           </div>
           <div className={styles.formRow}>
             <div className={styles.formCol} style={{ width: '100%' }}>
@@ -253,7 +297,15 @@ const Series: React.FC = () => {
         <form className={styles.seriesForm} onSubmit={handleSubmit}>
           <div className={styles.uploadContainer}>
             <label className={styles.uploadCircle} title="Upload Image">
-              <FaCloudUploadAlt className={styles.uploadIcon} />
+              {image ? (
+                <img
+                  src={URL.createObjectURL(image)}
+                  alt="Preview"
+                  style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }}
+                />
+              ) : (
+                <FaCloudUploadAlt className={styles.uploadIcon} />
+              )}
               <input
                 type="file"
                 accept="image/*"

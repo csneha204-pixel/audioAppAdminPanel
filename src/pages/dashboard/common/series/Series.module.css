@@ -92,6 +92,7 @@
 	border: 2px dashed #a00;
 	margin-bottom: 8px;
 	transition: border 0.2s, background 0.2s;
+	overflow: hidden;
 }
 .uploadCircle:hover {
 	border: 2px solid #a00;
