@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: scarletbox-admin:latest
+    container_name: scarletbox-admin
+    restart: unless-stopped
+    ports:
+      - "3000:80"

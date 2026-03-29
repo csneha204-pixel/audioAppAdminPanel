@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Dropdown from "../../../../components/dropdown/Dropdown";
-import MultiSelectDropdown from "../../../../components/dropdown/MultiSelectDropdown";
 import { FaChevronDown, FaRegCalendarAlt } from "react-icons/fa";
 import styles from "./Series.module.css";
 import { FaCloudUploadAlt } from "react-icons/fa";
-import { getRequest, postRequest } from "../../../../utils/core-api-functions/coreApiFunctions";
+import { getRequest, postRequest, putRequest } from "../../../../utils/core-api-functions/coreApiFunctions";
 import { URLS } from "../../../../utils/api-endpoints/endpoint";
 import { CONFIG } from "../../../../utils/config/config";
 import { toast } from "react-toastify";
@@ -43,14 +42,14 @@ const Series: React.FC = () => {
         const response = await getRequest<any>(`${CONFIG.API_BASE_URL}/${URLS.file.series}`);
         if (response && Array.isArray(response)) {
           const options = response.map((s: any) => ({
-            value: s._id,
+            value: s.show_id,
             label: s.series_name,
           }));
-          setSeriesOptions([{ value: "", label: "Select a Series" }, ...options]);
+          setSeriesOptions([{ value: '', label: 'Select a Series' }, ...options]);
         }
       } catch (error) {
-        console.error("Error fetching series:", error);
-        toast.error("Failed to load series");
+        console.error('Error fetching series:', error);
+        toast.error('Failed to load series');
       }
     };
 
@@ -66,7 +65,7 @@ const Series: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!image || !seriesName || !genre || !language || !description || !releaseDate) {
       toast.error("All fields are required.");
       return;
@@ -124,7 +123,7 @@ const Series: React.FC = () => {
             genre: response.genres ? response.genres.join(", ") : "",
             releaseDate: response.release_date ? response.release_date.split('T')[0] : "",
             description: response.description,
-            id: response._id
+            id: response.show_id
           });
           setEditMode(true);
         }
@@ -158,10 +157,28 @@ const Series: React.FC = () => {
       setEditData((prev: any) => ({ ...prev, image: files[0] }));
     }
   };
-  const handleEditSubmit = (e: React.FormEvent) => {
+  const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // handle update submission
-    alert("Series updated!");
+    if (!editData) return;
+    try {
+      const updatePayload: any = {
+        series_name: editData.seriesName,
+        language_id: editData.language_id,
+        description: editData.description,
+        release_date: editData.releaseDate,
+      };
+      if (editData.genre) {
+        updatePayload.genres = editData.genre.split(',').map((g: string) => g.trim()).filter(Boolean);
+      }
+      await putRequest(
+        `${CONFIG.API_BASE_URL}/${URLS.file.series}/${editData.id}`,
+        updatePayload
+      );
+      toast.success('Series updated successfully!');
+    } catch (error: any) {
+      console.error('Error updating series:', error);
+      toast.error(error.response?.data?.error || 'Error updating series');
+    }
   };
 
   return (
@@ -183,11 +200,11 @@ const Series: React.FC = () => {
             <label className={styles.uploadCircle} title="Upload Image">
               {editData.image && !imageLoadError ? (
                 typeof editData.image === 'string' ? (
-                  <div 
-                    style={{ 
-                      width: "100%", 
-                      height: "100%", 
-                      borderRadius: "50%", 
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: "50%",
                       backgroundImage: `url(${editData.image})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center"
