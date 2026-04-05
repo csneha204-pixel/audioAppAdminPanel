@@ -30,6 +30,7 @@ export const getRequest = async <T>(
   try {
     const response = await axios.get<T>(url, {
       ...config,
+      withCredentials: true,
       headers: {
         ...getHeaders(),
         ...config?.headers,
@@ -50,6 +51,7 @@ export const postRequest = async <T, D = Record<string, unknown>>(
   try {
     const response = await axios.post<T>(url, data, {
       ...config,
+      withCredentials: true,
       headers: {
         ...getHeaders(),
         ...config?.headers,
@@ -69,6 +71,7 @@ export const deleteRequest = async <T>(
   try {
     const response = await axios.delete<T>(url, {
       ...config,
+      withCredentials: true,
       headers: {
         ...getHeaders(),
         ...config?.headers,
@@ -89,6 +92,7 @@ export const putRequest = async <T, D = Record<string, unknown>>(
   try {
     const response = await axios.put<T>(url, data, {
       ...config,
+      withCredentials: true,
       headers: {
         ...getHeaders(),
         ...config?.headers,
