@@ -1,0 +1,105 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hide scrollbar for Chrome, Safari, and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+html,
+body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+:root {
+  /* Theme */
+  --primary-color: linear-gradient(180deg, #4A9EFF 0%, #357ABD 100%);
+  --secondary-color: #40a2ab;
+  --primary-color-more-dim: #e5fbfd;
+  --primary-color-more-dim-2: #ADEBF1;
+  --primary-color-more-dim-3: #40A2AB;
+  --primary-color-more-dim-4: #357ABD;
+
+  --error-color: #ef4444;
+  --error-color-dim: #ffe2e2;
+  --success-color: #027a48;
+  --success-color-dim: #ecfdf3;
+  --warning-color: #9a3412;
+  --warning-color-dim: #ffedd5;
+
+  --page-background-color: #ffffff;
+  --component-background-color: #eff1f4;
+  --component-background-color-muted: #f5f5f5;
+  --table-background-color: #f9fafb;
+
+  --text-color: #000000;
+  --text-color-muted: #adaebc;
+  --text-color-inverted: #ffffff;
+  --text-color-dim: #666666;
+  --icon-color: #374151;
+  --icon-color-2: #2D6CF6;
+  --icon-background-color-2: #E8F4FF;
+  --summary-card-bg-color: #FFFFFF;
+
+  --border-color: #d1d5db;
+  --button-background-color: #eff1f4;
+  --pagination-button-background-color: #eff1f4;
+
+  /* Font */
+  --font-family-base: "Manrope";
+
+  --font-size-base: 0.5rem;
+
+
+  --font-size-1: calc(var(--font-size-base) + 0.125rem);
+  --font-size-2: calc(var(--font-size-base) + 0.25rem);
+  --font-size-3: calc(var(--font-size-base) + 0.375rem);
+  --font-size-4: calc(var(--font-size-base) + 0.5rem);
+  --font-size-5: calc(var(--font-size-base) + 0.625rem);
+  --font-size-6: calc(var(--font-size-base) + 0.75rem);
+  --font-size-7: calc(var(--font-size-base) + 0.875rem);
+  --font-size-8: calc(var(--font-size-base) + 1rem);
+  --font-size-9: calc(var(--font-size-base) + 1.125rem);
+  --font-size-10: calc(var(--font-size-base) + 1.25rem);
+  --font-size-11: calc(var(--font-size-base) + 1.375rem);
+
+  --font-weight-base: 400;
+
+  --font-weight-1: calc(var(--font-weight-base) + 50);
+  --font-weight-2: calc(var(--font-weight-base) + 100);
+  --font-weight-3: calc(var(--font-weight-base) + 150);
+  --font-weight-4: calc(var(--font-weight-base) + 200);
+  --font-weight-5: calc(var(--font-weight-base) + 250);
+  --font-weight-6: calc(var(--font-weight-base) + 300);
+
+  /* Spacing */
+  --spacing-base: 4px;
+
+  --spacing-1: calc(var(--spacing-base) * 1);
+  --spacing-2: calc(var(--spacing-base) * 2);
+  --spacing-3: calc(var(--spacing-base) * 3);
+  --spacing-4: calc(var(--spacing-base) * 4);
+  --spacing-5: calc(var(--spacing-base) * 5);
+  --spacing-6: calc(var(--spacing-base) * 6);
+  --spacing-7: calc(var(--spacing-base) * 7);
+  --spacing-8: calc(var(--spacing-base) * 8);
+  --spacing-9: calc(var(--spacing-base) * 9);
+  --spacing-10: calc(var(--spacing-base) * 10);
+  --spacing-11: calc(var(--spacing-base) * 11);
+
+  /* Border radius */
+  --border-radius-base: 4px;
+
+  --border-radius-1: calc(var(--border-radius-base) * 1);
+  --border-radius-2: calc(var(--border-radius-base) * 2);
+  --border-radius-3: calc(var(--border-radius-base) * 3);
+  --border-radius-4: calc(var(--border-radius-base) * 4);
+  --border-radius-5: calc(var(--border-radius-base) * 5);
+  --border-radius-6: calc(var(--border-radius-base) * 6);
+  --border-radius-7: calc(var(--border-radius-base) * 7);
+  --border-radius-8: calc(var(--border-radius-base) * 8);
+}

@@ -1,0 +1,5 @@
+export const CONFIG = {
+  API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+  STATEMENT_ANALYSIS_API_BASE_URL: import.meta.env
+    .VITE_STATEMENT_ANALYSIS_API_BASE_URL,
+};
