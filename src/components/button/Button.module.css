@@ -1,0 +1,35 @@
+.submit-button {
+  padding: var(--spacing-3);
+  border: none;
+  border-radius: var(--border-radius-2);
+  color: var(--text-color-inverted);
+  font-size: var(--font-size-4);
+  background: var(--primary-color);
+  width: 100%;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-1);
+}
+
+.secondary-button {
+  padding: var(--spacing-3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-2);
+  color: var(--primary-color);
+  font-size: var(--font-size-3);
+  background: var(--card-background-color);
+  width: 100%;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-1);
+}
+
+.secondary-button:hover {
+  background: var(--primary-color);
+  color: var(--text-color-inverted);
+}

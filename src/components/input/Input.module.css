@@ -1,0 +1,10 @@
+.form-input {
+  padding: var(--spacing-3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-2);
+  font-size: var(--font-size-3);
+  width: 100%;
+  line-height: 1.4;
+  height: 44px;
+  margin-top: var(--spacing-1);
+}

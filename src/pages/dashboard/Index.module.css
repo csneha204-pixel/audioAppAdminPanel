@@ -1,0 +1,42 @@
+
+.dashboardContainer {
+	display: flex;
+	min-height: 100vh;
+	background: #111;
+	/* overflow: hidden; */
+	position: relative;
+}
+
+.dashboardMain {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	padding: 40px 24px 40px 24px;
+	min-height: 0;
+	box-sizing: border-box;
+	overflow-y: auto;
+	background: #111;
+}
+
+@media (max-width: 900px) {
+	.dashboardContainer {
+		flex-direction: column;
+		height: auto;
+	}
+	.dashboardMain {
+		padding: 12px;
+		min-height: 300px;
+	}
+}
+
+@media (max-width: 600px) {
+	.dashboardContainer {
+		flex-direction: column;
+		height: auto;
+	}
+	.dashboardMain {
+		padding: 8px;
+		min-height: 200px;
+	}
+}

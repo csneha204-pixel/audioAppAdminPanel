@@ -1,0 +1,314 @@
+/* Fix input autofill and all states for dark bg and light text */
+input[type="email"], input[type="password"], input[name="email"], input[name="password"] {
+  background: #181818 !important;
+  color: #E0E0E0 !important;
+  border: 1px solid #444 !important;
+  caret-color: #ff3333 !important;
+}
+
+input[type="email"]:focus, input[type="password"]:focus, input[name="email"]:focus, input[name="password"]:focus {
+  background: #181818 !important;
+  color: #E0E0E0 !important;
+  border: 1.5px solid #ff3333 !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 100px #181818 inset !important;
+  box-shadow: 0 0 0 100px #181818 inset !important;
+  -webkit-text-fill-color: #E0E0E0 !important;
+  caret-color: #ff3333 !important;
+}
+/* Force input background and text color for all states */
+input[type="email"], input[type="password"], input[name="email"], input[name="password"] {
+  background: transparent !important;
+  color: #E0E0E0 !important;
+  border: 1px solid #444 !important;
+}
+
+input[type="email"]:focus, input[type="password"]:focus, input[name="email"]:focus, input[name="password"]:focus {
+  background: transparent !important;
+  color: #E0E0E0 !important;
+  border: 1.5px solid #ff3333 !important;
+}
+/* Input text color for credentials */
+input[type="email"], input[type="password"], input[name="email"], input[name="password"] {
+  color: #D7D7D7 !important;
+}
+/* Make sign-in button red */
+.form-group button[type="submit"] {
+  background: #ff3333 !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Placeholder color for input fields */
+input::placeholder, textarea::placeholder {
+  color: #D7D7D7 !important;
+  opacity: 1;
+}
+
+.signin-page {
+  overflow: hidden;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  background: #111111;
+}
+
+.logo {
+  height: 48px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 30px;
+}
+
+.logo-image {
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 35px;
+  font-family: bold;
+  padding: 20px;
+  z-index: 11;
+  color: #ff3333;
+}
+/* Child of .signin-page: .right-panel */
+.right-panel {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #181818;
+  overflow-y: auto;
+  height: 90vh;
+}
+
+/* Grandchild of .right-panel: .mobile-images */
+.mobile-images {
+  display: none;
+}
+
+/* Grandchild of .right-panel: .top-links */
+.top-links {
+  position: absolute;
+  top: var(--spacing-6);
+  right: var(--spacing-6);
+  font-size: var(--font-size-2);
+}
+
+/* Great-grandchild of .top-links: a */
+.top-links a {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+/* Grandchild of .right-panel: .signin-form */
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+  padding: var(--spacing-10);
+  background: #181818;
+  border-radius: var(--border-radius-4);
+  row-gap: var(--spacing-4);
+  box-sizing: border-box;
+  box-shadow: 0 4px 32px 0 #00000055;
+}
+
+/* Great-grandchild of .right-panel: .welcome-title */
+.welcome-title {
+  font-size: var(--font-size-11);
+  margin-bottom: var(--spacing-1);
+  font-weight: var(--font-weight-4);
+  color: #ffff;
+}
+
+/* Great-grandchild of .right-panel: .welcome-subtext */
+.welcome-subtext {
+  font-size: var(--font-size-5);
+  color: #ffff;
+  margin-bottom: var(--spacing-6);
+  text-align: left;
+}
+
+/* Great-grandchild of .right-panel: .form-group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--spacing-1);
+  margin-bottom: var(--spacing-4);
+}
+
+/* Great-grandchild of .right-panel: .form-label */
+.form-label {
+  font-size: var(--font-size-3);
+  display: block;
+  color: #fff;
+}
+
+/* Great-great-grandchild of .form-label: .required */
+.form-label .required {
+  color: var(--error-color);
+}
+
+/* Great-grandchild of .right-panel: .password-group */
+.password-group {
+  position: relative;
+}
+
+/* Great-great-grandchild of .password-group: .toggle-password */
+.password-group .toggle-password {
+  position: absolute;
+  right: var(--spacing-4);
+  top: var(--spacing-10);
+  height: var(--spacing-5);
+  font-size: var(--font-size-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff3333;
+  cursor: pointer;
+}
+
+/* Great-great-grandchild hover of .password-group: .toggle-password:hover */
+.password-group .toggle-password:hover {
+  color: #fff;
+}
+
+/* Grandchild of .right-panel: .extra-links */
+.extra-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #aaa;
+}
+
+.extra-links-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: var(--font-size-3);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Great-great-grandchild of .extra-links: label */
+.extra-links label {
+  font-size: var(--font-size-3);
+  color: #fff;
+  min-width: 100px;
+}
+
+/* Great-great-grandchild of .extra-links: a */
+.extra-links a {
+  font-size: var(--font-size-3);
+  color: #ff3333;
+  text-decoration: none;
+  margin-bottom: var(--spacing-2);
+  cursor: pointer;
+}
+
+/* Child of .signin-page: .error, .text-danger */
+.error,
+.text-danger {
+  font-size: var(--font-size-2);
+  color: #ff3333;
+  margin-bottom: var(--spacing-2);
+}
+
+/* Child of .signin-page: .bottom-links */
+.bottom-links {
+  margin-top: var(--spacing-4);
+  text-align: center;
+  font-size: var(--font-size-2);
+  color: #fff;
+}
+
+/* Grandchild of .bottom-links: a */
+.bottom-links a {
+  color: #ff3333;
+  text-decoration: underline;
+}
+
+.already-account {
+  position: absolute;
+  top: var(--spacing-6);
+  right: var(--spacing-6);
+  font-size: var(--font-size-3);
+  color: #aaa;
+}
+
+.already-account a {
+  color: #ff3333;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: var(--spacing-1);
+}
+
+.register-now-mobile {
+  display: none;
+  text-align: center;
+  margin-top: var(--spacing-3);
+  font-size: var(--font-size-2);
+}
+.register-now-mobile a {
+  color: #ff3333;
+  text-decoration: underline;
+}
+
+/* Responsive */
+
+@media (max-width: 991.98px) {
+  .signin-page {
+    flex-direction: column;
+    height: auto;
+    background: #111111;
+  }
+}
+
+@media (max-width: 768px) {
+  .signin-page {
+    padding: 0 var(--spacing-4);
+    width: 100vw;
+    min-height: 100vh;
+    background: #111111;
+  }
+}
+
+@media (max-width: 500px) {
+  .right-panel {
+    padding: var(--spacing-2) 0;
+  }
+  .signin-form {
+    max-width: 100%;
+    padding: var(--spacing-4) var(--spacing-2);
+  }
+  .welcome-title {
+    font-size: var(--font-size-6);
+  }
+  .welcome-subtext {
+    font-size: var(--font-size-4);
+  }
+  .form-label,
+  .extra-links label,
+  .extra-links a,
+  .bottom-links,
+  .bottom-links a {
+    font-size: var(--font-size-4);
+  }
+  .logo {
+    justify-content: center;
+  }
+  .signin-page {
+    background: #111111;
+  }
+}
