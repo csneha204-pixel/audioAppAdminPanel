@@ -81,13 +81,15 @@ const Episodes: React.FC<EpisodesProps> = ({ preselectedShow }) => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		if (!thumbnail || !series || !season || !episodeNumber || !episodeName || !audio || !duration) {
-			toast.error("All fields are required.");
+		if (!series || !season || !episodeNumber || !episodeName || !audio || !duration) {
+			toast.error("All fields except thumbnail are required.");
 			return;
 		}
 
 		const formData = new FormData();
-		formData.append("image", thumbnail);
+		if (thumbnail) {
+			formData.append("image", thumbnail);
+		}
 		formData.append("audio", audio);
 		formData.append("episode_no", episodeNumber);
 		formData.append("episode_name", episodeName);
@@ -122,7 +124,7 @@ const Episodes: React.FC<EpisodesProps> = ({ preselectedShow }) => {
 	return (
 		<form className={styles.episodeForm} onSubmit={handleSubmit}>
 			<div className={styles.uploadContainer}>
-				<label className={styles.uploadCircle} title="Upload Thumbnail">
+				<label className={styles.uploadCircle} title="Upload Thumbnail (Optional)">
 					{thumbnail ? (
 						<img
 							src={URL.createObjectURL(thumbnail)}
